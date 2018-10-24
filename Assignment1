@@ -1,0 +1,216 @@
+
+Saikiran Palimpati <saikiranpalimpati.sp@gmail.com>
+Mon, Feb 5, 11:06 AM
+to palimpatisaikiran
+
+//***************************************************************************
+//  Project #1 Empirical calculation of the complexity of a sorting algorithm
+
+//                    Name: Saikiran Palimpati
+
+//                    Algorithm Analysis
+
+//                    Date: 02/05/2018
+//***************************************************************************
+/*   The project will emeprically determine the associated contants for both
+	 insertion sort and selection sort
+*/
+//***************************************************************************
+
+#include <iostream>
+#include<vector>
+#include<fstream>
+#include<time.h>
+
+using namespace std;
+// Header Files
+
+
+
+//***************************************************************************
+//                       Object Name : insertion_sort
+//                       Paramaeters : vector and its length (or) size
+//                       Complexity  : O(n^2)
+/*  The method sorts the give set of integers in ascending order by using
+	Insertion Sort algorithm
+*/
+// It returns the numbers of comparisons made during the whole sorting method
+//***************************************************************************
+
+int insertion_sort(vector <int> v, int length) {
+
+	int i = 0;
+
+	int j, temp;
+
+	int compct = 0;
+
+
+	for (int i = 0; ++compct&&i < length; i++) {
+		j = i;
+
+		//swap
+		while (++compct&&j > 0 && ++compct&&v[j] < v[j - 1]) {
+			temp = v[j];
+			v[j] = v[j - 1];
+			v[j - 1] = temp;
+			j--;
+		}
+	}
+
+	return compct;
+}
+
+
+//***************************************************************************
+//                       Object Name : selection_Sort
+//                       Paramaeters : vector and its length (or) size
+//                       Complexity  : O(n^2)
+/* The method sorts the give set of integers in ascending order by using
+   Selection Sort algorithm
+*/
+// It returns the numbers of comparisons made during the whole sorting method
+//***************************************************************************
+int selection_Sort(vector <int> v, int length)
+{
+	int i = 0;
+
+	int min, temp;
+
+	int compct = 0;
+
+	for (int i = 0; ++compct&& i < length - 1; i++)
+	{
+		min = i;
+
+
+		for (int j = i + 1; ++compct&& j < length; j++)
+		{
+
+			if (++compct&&v[j] < v[min])
+				min = j;
+		}
+
+		//swap
+		if (++compct&&min != i)
+		{
+			temp = v[min];
+			v[min] = v[i];
+			v[i] = temp;
+		}
+	}
+
+	return compct;
+}
+
+//main function
+int main() {
+
+	int compsize = 10;
+//Size of vectors holding the no of comparisons made during sorting techniq
+
+	float icompsum = 0;
+	//variable to calaculate the sum of all the values in the icomp vector
+
+	float scompsum = 0;
+	//variable to calaculate the sum of all the values in the scomp vector
+
+	vector <int> icomp(compsize);
+	//vector to hold the number of comparisons made during the Insertion sort
+
+	vector <int> scomp(compsize);
+	//vector to hold the number of comparisons made during the Selection sort
+
+	ofstream outfile("output.txt");
+	//Output file
+
+
+	int size = 100;
+	//size of vectors which hold the random variables
+
+	int j = 0;
+	//variable used to increment the vector index
+
+	while (size <= 1000)
+	{
+
+		int insertionComparisons = 0;
+
+		//to hold the cdomparisons during 10 runs
+
+		int selectionComparisons = 0;
+		for (int k = 0; k < 10; k++)
+		{
+			//loop to compute the data set 10 times 
+
+			vector <int> a(size);
+
+
+			vector <int> b(size);
+			//intialising vectors
+
+			srand(time(NULL));
+			//declaring the random value generator function
+
+			for (int i = 0; i < size; i++)
+			{
+				a[i] = rand() % 1000;
+				b = a;
+				//generating randomn numbers
+			}
+			
+			/*
+			storing random values in a vector and copying the values in 
+			the vector to the other one
+			*/
+
+			//adding up all the 10 values after calling the insertion_sort method
+			insertionComparisons = insertionComparisons + insertion_sort(a, size);
+
+			//adding up all the 10 values after calling the selection_Sort method
+			selectionComparisons = selectionComparisons + selection_Sort(b, size);
+
+
+		}
+		icomp[j] = insertionComparisons / compsize;
+		
+
+		scomp[j] = selectionComparisons / compsize;
+		//storing the average values in an vector 
+
+	
+		j++;
+
+
+
+		size = size + 100;
+		//incrementing the size of data set in steps of hundred
+	}
+
+
+
+	if (outfile.is_open())
+	{
+		//opening the output file
+
+
+		outfile << "The number of comparisons made while doing insertion sort by increasing the data set size by 100 each time are" << endl;
+
+		for (int n = 0; n < 10; n++)
+		{
+			outfile << icomp[n] << endl;
+
+		}
+
+		outfile << "The number of comparisons made while doing selection sort by increasing the data set size by 100 each time are" << endl;
+
+		for (int n = 0; n < 10; n++)
+		{
+
+			outfile << scomp[n] << endl;
+		}
+	}
+
+	return 0;
+
+}
